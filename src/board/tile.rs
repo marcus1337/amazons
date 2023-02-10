@@ -24,4 +24,11 @@ impl Tile {
         };
         String::from(str)
     }
+    
+    pub fn get_player(& self) -> Player{
+        match self {
+            Tile::Empty => panic!("Empty is not a player brick"),
+            Tile::Player(player) => return *player,
+        }
+    }
 }

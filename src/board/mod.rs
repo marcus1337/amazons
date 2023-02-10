@@ -26,6 +26,24 @@ impl Board{
         }
     }
 
+    fn get_points(&self) -> Vec<Point> {
+        let mut points = Vec::new();
+        let grid_size = self.get_grid_size();
+        for col in 0..grid_size{
+            for row in 0..grid_size{
+                points.push(Point::new(col, row));
+            }
+        }
+        points
+    }
+
+    pub fn get_player_brick_points(&self, player: Player) -> Vec<Point> {
+        self.get_points()
+        .into_iter()
+        .filter(|&point| self.has_brick(point) && self.get_brick(point) == player)
+        .collect()
+    }
+
     pub fn get_tile(&self, point: Point) -> Tile {
         self.tiles[point.col as usize][point.row as usize]
     }

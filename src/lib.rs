@@ -4,6 +4,8 @@ pub mod board;
 pub mod action;
 
 use board::point::Point;
+use action::history;
+
 
 #[repr(C)]
 pub struct Amazons {
