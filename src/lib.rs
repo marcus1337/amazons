@@ -1,6 +1,7 @@
 
 extern crate libc;
 pub mod board;
+pub mod action;
 
 use board::point::Point;
 

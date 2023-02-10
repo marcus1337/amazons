@@ -12,6 +12,17 @@ impl Point {
         Self { col: col, row: row }
     }
 
+    pub fn new_null() -> Self {
+        Self{
+            col:-1,
+            row:-1,
+        }
+    }
+
+    pub fn new_null_action() -> [Self;2] {
+        [Point::new_null(),Point::new_null()]
+    }
+
     pub fn in_bounds(&self) -> bool {
         self.col >= 0 && self.col < 6 && self.row >= 0 && self.row < 6
     }
