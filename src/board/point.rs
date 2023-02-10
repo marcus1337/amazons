@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Sub};
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Point {
     pub col: i32,
     pub row: i32,
@@ -23,8 +23,22 @@ impl Point {
         [Point::new_null(),Point::new_null()]
     }
 
-    pub fn in_bounds(&self) -> bool {
-        self.col >= 0 && self.col < 6 && self.row >= 0 && self.row < 6
+    pub fn in_bounds(&self, grid_size : i32) -> bool {
+        self.col >= 0 && self.row >= 0 && self.col < grid_size && self.row < grid_size
+    }
+
+    pub fn step_towards(&mut self, other: Point) -> bool {
+        if self.col < other.col {
+            self.col += 1;
+        } else if self.col > other.col {
+            self.col -= 1;
+        }
+        if self.row > other.row {
+            self.row -= 1;
+        } else if self.row < other.row {
+            self.row += 1;
+        }
+        *self != other
     }
 }
 

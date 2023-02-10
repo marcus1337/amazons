@@ -33,6 +33,7 @@ impl Board{
     pub fn has_brick(&self, point: Point) -> bool {
         self.get_tile(point) != Tile::Empty
     }
+
     pub fn get_brick(&self, point: Point) -> Player {
         match self.get_tile(point){
             Tile::Player(player) => player,
@@ -45,6 +46,10 @@ impl Board{
     }
     pub fn place_brick(&mut self, point: Point, player: Player) {
         self.tiles[point.col as usize][point.row as usize] = Tile::Player(player);
+    }
+
+    pub fn get_grid_size(&self) -> i32 {
+        6
     }
 
 
