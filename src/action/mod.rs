@@ -70,15 +70,41 @@ impl Action{
             .collect()
     }
     
-    pub fn get_drops(board: &Board, from: Point) -> Vec<Point> {
+    fn get_drops(board: &Board, from: Point) -> Vec<Point> {
         Action::get_reachable_points(board, from)
     }
     
-    pub fn get_moves(board: &Board, from: Point) -> Vec<[Point;2]> {
+    fn get_moves(board: &Board, from: Point) -> Vec<[Point;2]> {
         let mut points = Vec::new();
         for point in Action::get_reachable_points(board, from){
             points.push([from, point]);
         }
         points
     }
+
+    pub fn get_possible_moves(board: &Board, player: Player) -> Vec<[Point;2]> {
+        let mut possible_moves = Vec::<[Point;2]>::new();
+        for from in board.get_player_brick_points(player) {
+            possible_moves.extend(Action::get_moves(board, from));
+        }
+        possible_moves
+    }
+
+    pub fn get_possible_drops(board: &Board, player: Player) -> Vec<Point> {
+        let mut possible_drops = Vec::<Point>::new();
+        for from in board.get_player_brick_points(player) {
+            possible_drops.extend(Action::get_drops(board, from));
+        }
+        possible_drops
+    }
+
+    pub fn get_possible_drop_actions(board: &Board, player: Player) -> Vec<[Point;2]> {
+        let points = Action::get_possible_drops(board, player);
+        let mut actions = Vec::new();
+        for point in points{
+            actions.push([point, point]);
+        }
+        actions
+    }
+
 }

@@ -23,6 +23,22 @@ impl Point {
         [Point::new_null(),Point::new_null()]
     }
 
+    pub fn get_from(points: [Point;2]) -> Point {
+        points[0]
+    }
+    
+    pub fn get_to(points: [Point;2]) -> Point {
+        points[1]
+    }
+
+    pub fn is_move(points: [Point;2]) -> bool {
+        return points[0] != points[1]
+    }
+
+    pub fn is_drop(points: [Point;2]) -> bool {
+        return points[0] == points[1]
+    }
+
     pub fn in_bounds(&self, grid_size : i32) -> bool {
         self.col >= 0 && self.row >= 0 && self.col < grid_size && self.row < grid_size
     }

@@ -2,13 +2,16 @@
 extern crate libc;
 pub mod board;
 pub mod action;
+pub mod turn;
 
 use board::point::Point;
 use action::history;
+use turn::Turn;
 
 
 #[repr(C)]
 pub struct Amazons {
+    pub turn: Turn,
 
 }
 
@@ -17,6 +20,7 @@ impl Amazons{
     #[no_mangle]
     pub extern "C" fn amazons_make() -> Self {
         Self {
+            turn: Turn::new(),
         }
     }
     #[no_mangle]

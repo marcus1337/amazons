@@ -7,6 +7,22 @@ pub enum Player {
     None,
 }
 
+impl Player{
+    pub fn switch_player(&mut self){
+        *self = match self {
+            Player::One => Player::Two,
+            _ => Player::One,
+        };
+    }
+
+    pub fn get_opponent(player: Player) -> Player {
+        match player{
+            Player::One => Player::Two,
+            _ => Player::One,
+        }
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Tile {
@@ -24,7 +40,7 @@ impl Tile {
         };
         String::from(str)
     }
-    
+
     pub fn get_player(& self) -> Player{
         match self {
             Tile::Empty => panic!("Empty is not a player brick"),
