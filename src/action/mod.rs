@@ -66,6 +66,9 @@ impl Action {
                 return false;
             }
         }
+        if board.has_brick(to) {
+            return false;
+        }
         true
     }
 
