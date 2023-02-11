@@ -37,11 +37,11 @@ impl Amazons{
     }
     #[no_mangle]
     pub extern "C" fn amazons_is_one_winner(&self) -> bool {
-        self.amazons_is_game_over() && self.turn.state.get_player() == Player::Two       
+        self.amazons_is_game_over() && self.turn.state.get_player() == Player::One       
     }
     #[no_mangle]
     pub extern "C" fn amazons_is_two_winner(&mut self) -> bool {
-        self.amazons_is_game_over() && self.turn.state.get_player() == Player::One
+        self.amazons_is_game_over() && self.turn.state.get_player() == Player::Two
     }
     #[no_mangle]
     pub extern "C" fn amazons_can_undo(&self) -> bool {

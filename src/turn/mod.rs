@@ -94,11 +94,10 @@ impl Turn {
     }
 
     pub fn is_game_over(&self) -> bool {
-        match self.state {
-            TurnState::Move(player) => Action::get_possible_moves(&self.board, player).is_empty(),
-            TurnState::Drop(_) => false,
-        }
+        let opponent = Player::get_opponent(self.state.get_player());
+        Action::get_possible_moves(&self.board, opponent).is_empty()
     }
+    
     pub fn get_valid_actions(&self) -> Vec<[Point; 2]> {
         let last_action = self.history.get_action();
         match self.state {
