@@ -102,7 +102,7 @@ impl Turn {
     pub fn get_valid_actions(&self) -> Vec<[Point; 2]> {
         let last_action = self.history.get_action();
         match self.state {
-            TurnState::Drop(_) => Action::get_possible_drops(&self.board, last_action[0]),
+            TurnState::Drop(_) => Action::get_possible_drops(&self.board, last_action[1]),
             TurnState::Move(player) => Action::get_possible_moves(&self.board, player),
         }
     }
