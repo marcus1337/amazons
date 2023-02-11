@@ -105,6 +105,7 @@ impl Amazons{
     #[no_mangle]
     pub extern "C" fn amazons_apply_action(&mut self, from: Point, to: Point) {
         self.turn.apply_action([from,to]);
+        self.turn.history.add([from, to]);
     }
 
     #[no_mangle]
