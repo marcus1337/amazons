@@ -72,20 +72,24 @@ impl Turn {
 
     pub fn revert_action(&mut self, action: [Point; 2]) {
         let brick = self.board.get_brick(action[1]);
-        self.board.place_brick(action[0], brick);
+        if brick != Player::None{
+            self.board.place_brick(action[0], brick);
+        }
         self.board.remove_brick(action[1]);
         self.state.back();
     }
 
     pub fn undo(&mut self) {
         let action = self.history.get_action();
+        //println!("Undo() {:?}", action);
         self.history.undo();
         self.revert_action(action);
     }
 
     pub fn redo(&mut self) {
-        let action = self.history.get_action();
         self.history.redo();
+        let action = self.history.get_action();
+        //println!("Redo() {:?}", action);
         self.apply_action(action);
     }
 
