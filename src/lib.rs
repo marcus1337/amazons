@@ -97,6 +97,12 @@ impl Amazons{
     }
 
     #[no_mangle]
+    pub extern "C" fn amazons_get_stored_action(&self, action_index: i32) -> Action {
+        let points = self.turn.history.get_action_at_index(action_index);
+        Action::new(points[0], points[1])
+    }
+
+    #[no_mangle]
     pub extern "C" fn amazons_apply_action(&mut self, from: Point, to: Point) {
         self.turn.apply_action([from,to]);
     }
