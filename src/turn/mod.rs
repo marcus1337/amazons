@@ -1,10 +1,8 @@
-
-
-use super::board::Board;
 use super::action::history::History;
-use super::board::tile::Player;
 use super::action::Action;
 use super::board::point::Point;
+use super::board::tile::Player;
+use super::board::Board;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -15,22 +13,29 @@ pub enum TurnState {
 
 impl TurnState {
     pub fn next(&mut self) {
-        *self = match self{
+        *self = match self {
             TurnState::Move(player) => TurnState::Drop(*player),
             TurnState::Drop(player) => TurnState::Move(Player::get_opponent(*player)),
         }
     }
     pub fn back(&mut self) {
-        *self = match self{
+        *self = match self {
             TurnState::Move(player) => TurnState::Drop(Player::get_opponent(*player)),
             TurnState::Drop(player) => TurnState::Move(*player),
         }
     }
 
-    pub fn get_player(&self) -> Player{
-        match self{
+    pub fn get_player(&self) -> Player {
+        match self {
             TurnState::Drop(player) => *player,
             TurnState::Move(player) => *player,
+        }
+    }
+
+    pub fn is_move(&self) -> bool {
+        match self {
+            TurnState::Drop(_) => false,
+            TurnState::Move(_) => true,
         }
     }
 }
@@ -41,7 +46,6 @@ pub struct Turn {
     pub state: TurnState,
     pub board: Board,
     pub history: History,
-    
 }
 
 impl Turn {
@@ -53,12 +57,12 @@ impl Turn {
         }
     }
 
-    pub fn apply_action(&mut self, action: [Point;2]) {
+    pub fn apply_action(&mut self, action: [Point; 2]) {
         let from = Point::get_from(action);
         let to = Point::get_to(action);
         if Point::is_drop(action) {
             self.board.place_brick(to, Player::None)
-        }else{
+        } else {
             let brick = self.board.get_brick(from);
             self.board.remove_brick(from);
             self.board.place_brick(to, brick);
@@ -66,20 +70,20 @@ impl Turn {
         self.state.next();
     }
 
-    pub fn revert_action(&mut self, action: [Point;2]) {
+    pub fn revert_action(&mut self, action: [Point; 2]) {
         let brick = self.board.get_brick(action[1]);
         self.board.place_brick(action[0], brick);
         self.board.remove_brick(action[1]);
         self.state.back();
     }
 
-    pub fn undo(&mut self){
+    pub fn undo(&mut self) {
         let action = self.history.get_action();
         self.history.undo();
         self.revert_action(action);
     }
 
-    pub fn redo(&mut self){
+    pub fn redo(&mut self) {
         let action = self.history.get_action();
         self.history.redo();
         self.apply_action(action);
@@ -88,15 +92,14 @@ impl Turn {
     pub fn is_game_over(&self) -> bool {
         match self.state {
             TurnState::Move(player) => Action::get_possible_moves(&self.board, player).is_empty(),
-            TurnState::Drop(player) => Action::get_possible_drops(&self.board, player).is_empty(),
+            TurnState::Drop(_) => false,
         }
     }
-    pub fn get_valid_actions(&self) -> Vec<[Point;2]>{
+    pub fn get_valid_actions(&self) -> Vec<[Point; 2]> {
+        let last_action = self.history.get_action();
         match self.state {
-            TurnState::Drop(player) => Action::get_possible_drop_actions(&self.board, player),
+            TurnState::Drop(_) => Action::get_possible_drops(&self.board, last_action[0]),
             TurnState::Move(player) => Action::get_possible_moves(&self.board, player),
         }
     }
-
-
 }

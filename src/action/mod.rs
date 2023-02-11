@@ -1,19 +1,26 @@
-
-pub mod history;
 pub mod ai;
+pub mod history;
 
 use super::board;
-use board::point::Point;
-use board::point;
-use board::tile;
-use board::Board;
 use super::board::tile::Player;
+use super::turn::Turn;
+use board::point;
+use board::point::Point;
+//use board::tile;
+use board::Board;
 
-pub struct Action{
-
+#[repr(C)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub struct Action {
+    pub from: Point,
+    pub to: Point,
 }
 
-impl Action{
+impl Action {
+
+    pub fn new(from: Point, to: Point) -> Self {
+        Self { from: from, to: to }
+    }
 
     fn get_diagonal_lines(grid_size: i32, from: Point) -> Vec<Point> {
         let mut points = Vec::new();
@@ -30,7 +37,7 @@ impl Action{
         }
         points
     }
-    
+
     fn get_straight_lines(grid_size: i32, from: Point) -> Vec<Point> {
         let mut points = Vec::new();
         for i in 0..grid_size {
@@ -45,23 +52,23 @@ impl Action{
         }
         points
     }
-    
+
     fn get_lines(grid_size: i32, from: Point) -> Vec<Point> {
         let mut points = Action::get_diagonal_lines(grid_size, from);
         points.extend(Action::get_straight_lines(grid_size, from));
         points
     }
-    
+
     fn is_reachable(board: &Board, from: Point, to: Point) -> bool {
         let mut step = from;
         while step.step_towards(to) {
-            if board.has_brick(step){
+            if board.has_brick(step) {
                 return false;
             }
         }
         true
     }
-    
+
     fn get_reachable_points(board: &Board, from: Point) -> Vec<Point> {
         let grid_size = board.get_grid_size();
         Action::get_lines(grid_size, from)
@@ -69,42 +76,32 @@ impl Action{
             .filter(|&to| Action::is_reachable(board, from, to))
             .collect()
     }
-    
+
     fn get_drops(board: &Board, from: Point) -> Vec<Point> {
         Action::get_reachable_points(board, from)
     }
-    
-    fn get_moves(board: &Board, from: Point) -> Vec<[Point;2]> {
+
+    fn get_moves(board: &Board, from: Point) -> Vec<[Point; 2]> {
         let mut points = Vec::new();
-        for point in Action::get_reachable_points(board, from){
+        for point in Action::get_reachable_points(board, from) {
             points.push([from, point]);
         }
         points
     }
 
-    pub fn get_possible_moves(board: &Board, player: Player) -> Vec<[Point;2]> {
-        let mut possible_moves = Vec::<[Point;2]>::new();
+    pub fn get_possible_moves(board: &Board, player: Player) -> Vec<[Point; 2]> {
+        let mut possible_moves = Vec::<[Point; 2]>::new();
         for from in board.get_player_brick_points(player) {
             possible_moves.extend(Action::get_moves(board, from));
         }
         possible_moves
     }
 
-    pub fn get_possible_drops(board: &Board, player: Player) -> Vec<Point> {
-        let mut possible_drops = Vec::<Point>::new();
-        for from in board.get_player_brick_points(player) {
-            possible_drops.extend(Action::get_drops(board, from));
-        }
-        possible_drops
-    }
-
-    pub fn get_possible_drop_actions(board: &Board, player: Player) -> Vec<[Point;2]> {
-        let points = Action::get_possible_drops(board, player);
+    pub fn get_possible_drops(board: &Board, from: Point) -> Vec<[Point; 2]> {
         let mut actions = Vec::new();
-        for point in points{
-            actions.push([point, point]);
+        for point in Action::get_drops(board, from) {
+            actions.push([from, point]);
         }
         actions
     }
-
 }

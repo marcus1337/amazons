@@ -1,7 +1,7 @@
 pub mod point;
 pub mod tile;
 
-use std::fmt;
+//use std::fmt;
 use tile::Tile;
 use tile::Player;
 use point::Point;
