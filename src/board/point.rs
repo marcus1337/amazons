@@ -31,14 +31,6 @@ impl Point {
         points[1]
     }
 
-    pub fn is_move(points: [Point;2]) -> bool {
-        return points[0] != points[1]
-    }
-
-    pub fn is_drop(points: [Point;2]) -> bool {
-        return points[0] == points[1]
-    }
-
     pub fn in_bounds(&self, grid_size : i32) -> bool {
         self.col >= 0 && self.row >= 0 && self.col < grid_size && self.row < grid_size
     }

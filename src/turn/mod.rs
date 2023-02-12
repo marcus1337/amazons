@@ -60,12 +60,13 @@ impl Turn {
     pub fn apply_action(&mut self, action: [Point; 2]) {
         let from = Point::get_from(action);
         let to = Point::get_to(action);
-        if Point::is_drop(action) {
-            self.board.place_brick(to, Player::None)
-        } else {
+
+        if self.state.is_move() {
             let brick = self.board.get_brick(from);
             self.board.remove_brick(from);
             self.board.place_brick(to, brick);
+        }else{
+            self.board.place_brick(to, Player::None)
         }
         self.state.next();
     }
